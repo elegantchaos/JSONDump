@@ -109,12 +109,16 @@ extension NSValue: JSONDumpable {
         case "{NSEdgeInsets=dddd}":
             let insets = edgeInsetsValue
             return ["top": insets.top, "left": insets.left, "bottom": insets.bottom, "right": insets.right]
+            
+            #if !os(Linux)
         case "^v":
             if let pointer = pointerValue {
                 return "-> \(pointer)"
             } else {
                 return "-> nil"
             }
+            #endif
+            
         default:
             return self
         }
