@@ -1,37 +1,29 @@
 env:
   global:
-    - SWIFT_BRANCH=swift-4.2-branch
-    - SWIFT_VERSION=swift-4.2-DEVELOPMENT-SNAPSHOT-2018-05-30-a
+  - SWIFT_BRANCH=swift-4.2-branch
+  - SWIFT_VERSION=swift-4.2-DEVELOPMENT-SNAPSHOT-2018-05-30-a
 matrix:
   include:
-    - os: linux
-      language: generic
-      dist: trusty
-      sudo: required
-      install:
-        - sudo apt-get install clang libicu-dev
-        - mkdir swift
-        - curl https://swift.org/builds/$SWIFT_BRANCH/ubuntu1404/$SWIFT_VERSION/$SWIFT_VERSION-ubuntu14.04.tar.gz -s | tar xz -C swift &> /dev/null
-        - export PATH="$(pwd)/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH"
-        - swift package update
-      script:
-        - swift test
-
-    - os: osx
-      osx_image: xcode9.3
-      language: swift
-      sudo: required
-      install:
-        - wget https://swift.org/builds/$SWIFT_BRANCH/xcode/$SWIFT_VERSION/$SWIFT_VERSION-osx.pkg
-        - sudo installer -pkg $SWIFT_VERSION-osx.pkg -target /
-        - export PATH="/Library/Developer/Toolchains/$SWIFT_VERSION.xctoolchain/usr/bin:$PATH"
-        - swift package update
-
-      script:
-        - swift test -Xswiftc -target -Xswiftc x86_64-apple-macosx10.12
-
+  - os: linux
+    language: generic
+    dist: trusty
+    sudo: required
+    install:
+    - sudo apt-get install clang libicu-dev
+    - mkdir swift
+    - curl https://swift.org/builds/$SWIFT_BRANCH/ubuntu1404/$SWIFT_VERSION/$SWIFT_VERSION-ubuntu14.04.tar.gz
+      -s | tar xz -C swift &> /dev/null
+    - export PATH="$(pwd)/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH"
+    - swift package update
+    script:
+    - swift test
+  - os: osx
+    osx_image: xcode10
+    language: swift
+    script:
+    - swift test
 notifications:
   email: false
   slack:
     rooms:
-      secure: d1idbHYYMnE1o+Mu0PJWuYo6lFTJNEMe0yLb3dpYWb18ZWVvwgrKWxFYI7WHQSWEJBNsIyTu4wfArBoFqccphEPS7qTQ6rFaFzS6ktC+XNx7DouBHJQmlXBaWQlQiC3CQnMFIBq9/yjlcAUgE80ltt48jdk2tVw33EJGIe1PPo+7GqF1vTeQmkYuqXdpvwba5YL9kCsFr6MHHeB/TEy/J57kei22L5flDYP2DanhsAl0XsXPIwSZkrzcSvG18gckdkR+PVw1xBnDtFknmSvvhlMRRytqZNBnZ4gExr7Mp/lzFj6WiayLyx95FmUp0yLPf2Dr8CDlD8kJPIG/SQnD46+rMRxMRnOMEg02MOxN8v2zc6HAjLTAJr0WRKtRqW+QCik1Z+Bp/g2Cap7O3qaAZx2JQ6hHdLAOh7PvobeN/j7DN/cDCmbhlCJdwx/n/Mn34NYq4H8X8lGtWtXxSk5YPpQEj0WfY14JYiRDhU2a85KuOcNq4dxx/1INHS+PCfbAEt0w60I2MKayg/CfHyWsOgNXyB7K4wbaa/C4KAYr0Nyx9d9kP+/YoOMNykZCasEm8LY9Woqc5tX7wvu6BBZXImiHcKHY7v0RCLN3K5bpboYzGt7znBCHqk+9a2MF822H4JpvUx9l6MglVWS+cYhmMXhBkdGXZyFwHw+A3Rqms+8=
+      secure: W5g00Y/pYaz8Wb5FIsxNKqf1Jc4iDfUW0ntA0kjiz9c+qsAz4CwvQrRiGX0NZzfp9KirbKHZUsngPDoHH6mYTnzoTwcencvA/+BkH/ckiW+vYcy51poXrrngrVGjDJ3cF9eTv7t0oYFLgj2RIX7Vryh0nwjJteZyItv3ho4ZNTd3wW7eiqDMlfGt21IJSYY6Cdkg2b517WS55cF8G+ATt75Dr79pwWTw8DujtYUxnpuRdnYmT4fO0Wlv8xUThy8G4rnZPz2cQghY88PbBfs/DBsXJTtU/ZWepSNiaOMnNeKk6Ed0MkdEAM5MYFixGQ+RV2dqW7o1caKFUnAQkB2PiXKDXyWkxyCaEOLC1uIGYL/JKpUcP5qzDngvZVWr6jCDmSi8uLyaSpRviZjxS3rYwx69z4Y9/U0xUhEdvd9Zr8PpAgEUcLPMC29U32HGLf1O/pfq4DxqFqWg+GdD5kUStmr4JW5QPCG5Zc7ShL9RTw5BQiLrzbrlY240pdNLgzBPoqbThu7yuGH600Jv95X0fY8r+4jou+EsDqvT4sDRNJGC0oZ8ua52bc90XVxyNjLYJ3b0pCBGcWm6tDtSL4IQR5MvSCd7zSq7gKC9EipMsP8UzXM2k/lOozc4eeuuSg/lQaGUWMmmXsmkh0nzehnwPx30GrHMSo6E95igzSzbGwk=
