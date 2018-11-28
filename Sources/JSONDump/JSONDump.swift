@@ -5,15 +5,27 @@
 
 import Foundation
 
+/**
+ Protocol that classes can implement to indicate that they can be converted to a valid JSON object.
+ */
+
 public protocol JSONDumpable {
-    func dumpableAsJSON() -> Any
+    func asValidJSONObject() -> Any
 }
 
 extension JSONDumpable {
+
+    /**
+     Dump the object as a json string using the default formatting options.
+     */
     
     public func jsonDump() -> String {
         return JSONDump.dump(value: self, options: JSONDump.defaultDumpOptions)
     }
+    
+    /**
+     Dump the object as a json string using specific options
+     */
     
     public func jsonDump(options: JSONSerialization.WritingOptions) -> String {
         return JSONDump.dump(value: self, options: options)
@@ -21,6 +33,11 @@ extension JSONDumpable {
 }
 
 class JSONDump {
+    
+    /**
+     Pretty print by default. Also sort keys if possible.
+     */
+    
     static var defaultDumpOptions : JSONSerialization.WritingOptions {
         if #available(macOS 10.13, *) {
             return [.prettyPrinted, .sortedKeys]
@@ -29,25 +46,37 @@ class JSONDump {
         }
     }
     
-    class func dumpableAsJSON(_ value: Any) -> Any {
-        let result: Any
-
-        if let value = value as? JSONDumpable {
-            result = value.dumpableAsJSON()
-        } else if let number = value as? NSNumber {
-            result = number
-        } else if let int = value as? Int {
-            result = int
-        } else if let double = value as? Double {
-            result = double
-        } else {
-            result = "\(value)"
+    /**
+     Turn a value into something that can be serialised as JSON.
+     */
+    
+    class func asValidJSONObject(_ value: Any) -> Any {
+        switch value {
+        case let (valid) as JSONDumpable:
+            return valid.asValidJSONObject()
+            
+        case is NSNumber:
+            return value
+            
+            #if os(Linux)
+            // On Linux we need some additional handling for fundamental types.
+            // On other platforms these are already handled by casting to NSNumber.
+        case is Int, is Double, is Bool:
+            return value
+            #endif
+            
+        default:
+            return "\(value)"
         }
-        return result
     }
-
+    
+    /**
+     Make a sanitized version of the object, then try to encode it as JSON.
+     If the encoding still fails, we fall back on string interpolation.
+    */
+    
     class func dump(value: Any, options: JSONSerialization.WritingOptions) -> String {
-        let sanitized = dumpableAsJSON(value)
+        let sanitized = asValidJSONObject(value)
         if let data = try? JSONSerialization.data(withJSONObject: sanitized, options: options)  {
             if let encoded = String(data: data, encoding: .utf8) {
                 return encoded
@@ -56,47 +85,45 @@ class JSONDump {
         
         return "\(sanitized)"
     }
-
+    
 }
 
 extension NSString: JSONDumpable {
-    public func dumpableAsJSON() -> Any {
+    public func asValidJSONObject() -> Any {
         return self
     }
 }
 
 extension NSValue: JSONDumpable {
-    public func dumpableAsJSON() -> Any {
+    public func asValidJSONObject() -> Any {
         return self
     }
 }
 
 extension Array: JSONDumpable {
-    public func dumpableAsJSON() -> Any {
+    public func asValidJSONObject() -> Any {
         var sanitized = Array<Any>()
         for item in self {
-            sanitized.append(JSONDump.dumpableAsJSON(item))
+            sanitized.append(JSONDump.asValidJSONObject(item))
         }
         return sanitized
     }
 }
 
 extension Dictionary: JSONDumpable {
-
-    public func dumpableAsJSON() -> Any {
+    public func asValidJSONObject() -> Any {
         var sanitized = Dictionary<String, Any>()
         for item in self {
             if let key = item.key as? String {
                 let value: Any
                 if let subdict = item.value as? Dictionary<Key, Any> {
-                    value = subdict.dumpableAsJSON()
+                    value = subdict.asValidJSONObject()
                 } else {
-                    value = JSONDump.dumpableAsJSON(item.value)
+                    value = JSONDump.asValidJSONObject(item.value)
                 }
                 sanitized[key] = value
             }
         }
         return sanitized
     }
-
 }
