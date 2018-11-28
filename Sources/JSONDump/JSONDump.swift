@@ -36,6 +36,10 @@ class JSONDump {
             result = value.dumpableAsJSON()
         } else if let number = value as? NSNumber {
             result = number
+        } else if let int = value as? Int {
+            result = int
+        } else if let double = value as? Double {
+            result = double
         } else {
             result = "\(value)"
         }
