@@ -30,7 +30,14 @@ class JSONDump {
     }
 
     class func dump(_ sanitized: Any) -> String {
-        if let data = try? JSONSerialization.data(withJSONObject: sanitized, options: [.prettyPrinted, .sortedKeys])  {
+        let options: JSONSerialization.WritingOptions
+        if #available(macOS 10.13, *) {
+            options = [.prettyPrinted, .sortedKeys]
+        } else {
+            options = [.prettyPrinted]
+        }
+
+        if let data = try? JSONSerialization.data(withJSONObject: sanitized, options:options)  {
             if let encoded = String(data: data, encoding: .utf8) {
                 return encoded
             }

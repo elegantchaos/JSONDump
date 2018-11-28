@@ -2,14 +2,18 @@ import XCTest
 @testable import JSONDump
 
 final class JSONDumpTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(JSONDump().text, "Hello, World!")
+    func testString() {
+
+        let list = [ "test" ]
+        XCTAssertEqual(list.jsonDump(), """
+[
+  "test"
+]
+"""
+        )
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testString", testString),
     ]
 }
