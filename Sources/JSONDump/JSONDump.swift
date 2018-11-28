@@ -5,13 +5,13 @@
 
 import Foundation
 
-protocol JSONDumpable {
+public protocol JSONDumpable {
     func dumpableAsJSON() -> Any
     func jsonDump() -> String
 }
 
 extension JSONDumpable {
-    func jsonDump() -> String {
+    public func jsonDump() -> String {
         let sanitzed = self.dumpableAsJSON()
         return JSONDump.dump(sanitzed)
     }
@@ -49,19 +49,19 @@ class JSONDump {
 }
 
 extension NSString: JSONDumpable {
-    func dumpableAsJSON() -> Any {
+    public func dumpableAsJSON() -> Any {
         return self
     }
 }
 
 extension NSValue: JSONDumpable {
-    func dumpableAsJSON() -> Any {
+    public func dumpableAsJSON() -> Any {
         return self
     }
 }
 
 extension Array: JSONDumpable {
-    func dumpableAsJSON() -> Any {
+    public func dumpableAsJSON() -> Any {
         var sanitized = Array<Any>()
         for item in self {
             sanitized.append(JSONDump.sanitized(item))
@@ -73,7 +73,7 @@ extension Array: JSONDumpable {
 
 extension Dictionary: JSONDumpable {
 
-    func dumpableAsJSON() -> Any {
+    public func dumpableAsJSON() -> Any {
         var sanitized = Dictionary<String, Any>()
         for item in self {
             if let key = item.key as? String {
