@@ -100,9 +100,25 @@ extension NSValue: JSONDumpable {
         case "{CGPoint=dd}":
             let point = pointValue
             return ["x": point.x, "y": point.y]
+        case "{CGSize=dd}":
+            let size = sizeValue
+            return ["width": size.width, "height": size.height]
         case "{CGRect={CGPoint=dd}{CGSize=dd}}":
             let rect = rectValue
             return ["x": rect.origin.x, "y": rect.origin.y, "width": rect.width, "height": rect.height]
+        case "{NSEdgeInsets=dddd}":
+            let insets = edgeInsetsValue
+            return ["top": insets.top, "left": insets.left, "bottom": insets.bottom, "right": insets.right]
+            
+            #if !os(Linux)
+        case "^v":
+            if let pointer = pointerValue {
+                return "-> \(pointer)"
+            } else {
+                return "-> nil"
+            }
+            #endif
+            
         default:
             return self
         }
