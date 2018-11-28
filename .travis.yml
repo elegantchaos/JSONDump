@@ -21,6 +21,7 @@ matrix:
     osx_image: xcode10
     language: swift
     script:
+    - swift --version
     - swift test
 notifications:
   email: false
