@@ -38,11 +38,23 @@ class JSONDump {
      Pretty print by default. Also sort keys if possible.
      */
     
-    static var defaultDumpOptions : JSONSerialization.WritingOptions {
+    public static var defaultDumpOptions : JSONSerialization.WritingOptions {
         if #available(macOS 10.13, *) {
             return [.prettyPrinted, .sortedKeys]
         } else {
             return [.prettyPrinted]
+        }
+    }
+
+    /**
+     Don't pretty print, but sort keys if possible.
+     */
+    
+    public static var compactDumpOptions : JSONSerialization.WritingOptions {
+        if #available(macOS 10.13, *) {
+            return [.sortedKeys]
+        } else {
+            return []
         }
     }
     
@@ -55,7 +67,7 @@ class JSONDump {
         case let (valid) as JSONDumpable:
             return valid.asValidJSONObject()
             
-        case is NSNumber:
+        case is NSNumber, is NSString:
             return value
             
             #if os(Linux)
@@ -88,15 +100,19 @@ class JSONDump {
     
 }
 
-extension NSString: JSONDumpable {
-    public func asValidJSONObject() -> Any {
-        return self
-    }
-}
-
 extension NSValue: JSONDumpable {
     public func asValidJSONObject() -> Any {
-        return self
+        let type = String(cString:objCType)
+        switch type {
+        case "{CGPoint=dd}":
+            let point = pointValue
+            return ["x": point.x, "y": point.y]
+        case "{CGRect={CGPoint=dd}{CGSize=dd}}":
+            let rect = rectValue
+            return ["x": rect.origin.x, "y": rect.origin.y, "width": rect.width, "height": rect.height]
+        default:
+            return self
+        }
     }
 }
 
