@@ -32,8 +32,8 @@ final class JSONDumpTests: XCTestCase {
     
     func testNSString() {
         
-        let list = [ "test" as NSString ]
-        XCTAssertEqual(list.jsonDump(options: JSONDump.compactDumpOptions), "[\"test\"]")
+        let list = [ "test string" as NSString ]
+        XCTAssertEqual(list.jsonDump(options: JSONDump.compactDumpOptions), "[\"test string\"]")
     }
     
     func testNSNumber() {

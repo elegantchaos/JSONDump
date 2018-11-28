@@ -64,10 +64,10 @@ class JSONDump {
     
     class func asValidJSONObject(_ value: Any) -> Any {
         switch value {
-        case let (valid) as JSONDumpable:
-            return valid.asValidJSONObject()
+        case let dumpable as JSONDumpable:
+            return dumpable.asValidJSONObject()
             
-        case is NSNumber, is NSString:
+        case is NSNumber:
             return value
             
             #if os(Linux)
@@ -75,6 +75,8 @@ class JSONDump {
             // On other platforms these are already handled by casting to NSNumber.
         case is Int, is Double, is Bool:
             return value
+        case is NSString:
+            return "\"\(value)\""
             #endif
             
         default:
