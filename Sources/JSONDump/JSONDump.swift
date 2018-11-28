@@ -75,8 +75,8 @@ class JSONDump {
             // On other platforms these are already handled by casting to NSNumber.
         case is Int, is Double, is Bool:
             return value
-        case is NSString:
-            return value as String
+//        case is NSString:
+//            return value as String
             #endif
             
         default:
