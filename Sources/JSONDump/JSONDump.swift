@@ -70,14 +70,12 @@ class JSONDump {
         case is NSNumber:
             return value
             
-            #if os(Linux)
-            // On Linux we need some additional handling for fundamental types.
-            // On other platforms these are already handled by casting to NSNumber.
-        case is Int, is Double, is Bool:
-            return value
-//        case is NSString:
-//            return value as String
-            #endif
+//            #if os(Linux)
+//            // On Linux we need some additional handling for fundamental types.
+//            // On other platforms these are already handled by casting to NSNumber.
+//        case is Int, is Double, is Bool:
+//            return value
+//            #endif
             
         default:
             return "\(value)"
