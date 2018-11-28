@@ -13,6 +13,31 @@ final class JSONDumpTests: XCTestCase {
         )
     }
 
+    func testInteger() {
+        
+        let list = [ 123 ]
+        let dumped = list.jsonDump()
+        XCTAssertEqual(dumped, """
+[
+  123
+]
+"""
+        )
+    }
+
+    func testDouble() {
+        
+        let list = [ 123.45 ]
+        let dumped = list.jsonDump()
+        XCTAssertEqual(dumped, """
+[
+  123.45
+]
+"""
+        )
+    }
+
+    
     static var allTests = [
         ("testString", testString),
     ]
