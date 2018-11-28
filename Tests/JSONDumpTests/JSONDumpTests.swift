@@ -56,13 +56,32 @@ final class JSONDumpTests: XCTestCase {
         XCTAssertEqual(dumped, "[\"2001-01-01 00:00:00 +0000\"]")
     }
 
+    func testNested() {
+        
+        let dict: [String:Any] = [
+            "sub" : [ "list" : [ 1, 2, 3] ]
+        ]
+        
+        let dumped = dict.jsonDump(options: [])
+        XCTAssertEqual(dumped, "{\"sub\":{\"list\":[1,2,3]}}")
+    }
 
+    func testCustomObject() {
+        class Object: CustomStringConvertible {
+            let description = "custom object"
+        }
+        
+        let list = [ Object() ]
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[\"custom object\"]")
+    }
+    
     func testDictionary() {
         
         let dict: [String:Any] = [
             "date" : Date(timeIntervalSince1970: 0),
             "double": 123.45,
-        "integer": 123
+            "integer": 123
         ]
         
         let dumped = dict.jsonDump()
@@ -75,5 +94,4 @@ final class JSONDumpTests: XCTestCase {
 """
         )
     }
-
 }
