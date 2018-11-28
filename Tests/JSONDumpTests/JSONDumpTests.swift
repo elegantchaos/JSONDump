@@ -37,8 +37,83 @@ final class JSONDumpTests: XCTestCase {
         )
     }
 
+    func testBool() {
+        
+        let list = [ true ]
+        let dumped = list.jsonDump()
+        XCTAssertEqual(dumped, """
+[
+  true
+]
+"""
+        )
+    }
     
-    static var allTests = [
-        ("testString", testString),
-    ]
+    func testNSString() {
+        
+        let list = [ "test" as NSString ]
+        XCTAssertEqual(list.jsonDump(), """
+[
+  "test"
+]
+"""
+        )
+    }
+    
+    func testNSNumber() {
+        
+        let list = [ 123 as NSNumber ]
+        let dumped = list.jsonDump()
+        XCTAssertEqual(dumped, """
+[
+  123
+]
+"""
+        )
+    }
+    
+    func testNSNumberDouble() {
+        
+        let list = [ 123.45 as NSNumber ]
+        let dumped = list.jsonDump()
+        XCTAssertEqual(dumped, """
+[
+  123.45
+]
+"""
+        )
+    }
+
+    func testDate() {
+        
+        let list = [ Date(timeIntervalSinceReferenceDate: 0) ]
+        let dumped = list.jsonDump()
+        XCTAssertEqual(dumped, """
+[
+  "2001-01-01 00:00:00 +0000"
+]
+"""
+        )
+    }
+
+
+    func testDictionary() {
+        
+        let dict: [String:Any] = [
+            "date" : Date(timeIntervalSince1970: 0),
+            "double": 123.45,
+        "integer": 123
+        ]
+        
+        let dumped = dict.jsonDump()
+        XCTAssertEqual(dumped, """
+{
+  "date" : "1970-01-01 00:00:00 +0000",
+  "double" : 123.45,
+  "integer" : 123
+}
+"""
+        )
+    }
+
 }

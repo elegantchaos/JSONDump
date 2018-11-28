@@ -23,10 +23,8 @@ class JSONDump {
 
         if let value = value as? JSONDumpable {
             result = value.dumpableAsJSON()
-        } else if let double = value as? Double {
-            result = double
-        } else if let int = value as? Int {
-            result = int
+        } else if let number = value as? NSNumber {
+            result = number
         } else {
             result = "\(value)"
         }
