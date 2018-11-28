@@ -19,11 +19,10 @@ For any type that doesn't have any other options, the code falls back to string 
 
 ```swift
 let dict: [String:Any] = [
-"date" : Date(timeIntervalSince1970: 0),
-"double": 123.45,
-"integer": 123
+    "date" : Date(timeIntervalSince1970: 0),
+    "double": 123.45,
+    "integer": 123
 ]
-
 print(dict.jsonDump())
 
 let list = [ 123.45, 1, 42, "foo", "bar" ]

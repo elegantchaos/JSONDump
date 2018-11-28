@@ -76,7 +76,7 @@ class JSONDump {
         case is Int, is Double, is Bool:
             return value
         case is NSString:
-            return "\"\(value)\""
+            return value as String
             #endif
             
         default:
