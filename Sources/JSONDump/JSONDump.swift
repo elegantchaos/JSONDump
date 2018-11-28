@@ -7,18 +7,29 @@ import Foundation
 
 public protocol JSONDumpable {
     func dumpableAsJSON() -> Any
-    func jsonDump() -> String
 }
 
 extension JSONDumpable {
+    
     public func jsonDump() -> String {
-        let sanitzed = self.dumpableAsJSON()
-        return JSONDump.dump(sanitzed)
+        return JSONDump.dump(value: self, options: JSONDump.defaultDumpOptions)
+    }
+    
+    public func jsonDump(options: JSONSerialization.WritingOptions) -> String {
+        return JSONDump.dump(value: self, options: options)
     }
 }
 
 class JSONDump {
-    class func sanitized(_ value: Any) -> Any {
+    static var defaultDumpOptions : JSONSerialization.WritingOptions {
+        if #available(macOS 10.13, *) {
+            return [.prettyPrinted, .sortedKeys]
+        } else {
+            return [.prettyPrinted]
+        }
+    }
+    
+    class func dumpableAsJSON(_ value: Any) -> Any {
         let result: Any
 
         if let value = value as? JSONDumpable {
@@ -31,20 +42,14 @@ class JSONDump {
         return result
     }
 
-    class func dump(_ sanitized: Any) -> String {
-        let options: JSONSerialization.WritingOptions
-        if #available(macOS 10.13, *) {
-            options = [.prettyPrinted, .sortedKeys]
-        } else {
-            options = [.prettyPrinted]
-        }
-
-        if let data = try? JSONSerialization.data(withJSONObject: sanitized, options:options)  {
+    class func dump(value: Any, options: JSONSerialization.WritingOptions) -> String {
+        let sanitized = dumpableAsJSON(value)
+        if let data = try? JSONSerialization.data(withJSONObject: sanitized, options: options)  {
             if let encoded = String(data: data, encoding: .utf8) {
                 return encoded
             }
         }
-
+        
         return "\(sanitized)"
     }
 
@@ -66,7 +71,7 @@ extension Array: JSONDumpable {
     public func dumpableAsJSON() -> Any {
         var sanitized = Array<Any>()
         for item in self {
-            sanitized.append(JSONDump.sanitized(item))
+            sanitized.append(JSONDump.dumpableAsJSON(item))
         }
         return sanitized
     }
@@ -82,7 +87,7 @@ extension Dictionary: JSONDumpable {
                 if let subdict = item.value as? Dictionary<Key, Any> {
                     value = subdict.dumpableAsJSON()
                 } else {
-                    value = JSONDump.sanitized(item.value)
+                    value = JSONDump.dumpableAsJSON(item.value)
                 }
                 sanitized[key] = value
             }

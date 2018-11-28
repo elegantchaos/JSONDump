@@ -5,95 +5,55 @@ final class JSONDumpTests: XCTestCase {
     func testString() {
 
         let list = [ "test" ]
-        XCTAssertEqual(list.jsonDump(), """
-[
-  "test"
-]
-"""
-        )
+        XCTAssertEqual(list.jsonDump(options: []), "[\"test\"]")
     }
 
     func testInteger() {
         
         let list = [ 123 ]
-        let dumped = list.jsonDump()
-        XCTAssertEqual(dumped, """
-[
-  123
-]
-"""
-        )
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[123]")
     }
 
     func testDouble() {
         
         let list = [ 123.45 ]
-        let dumped = list.jsonDump()
-        XCTAssertEqual(dumped, """
-[
-  123.45
-]
-"""
-        )
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[123.45]")
     }
 
     func testBool() {
         
         let list = [ true ]
-        let dumped = list.jsonDump()
-        XCTAssertEqual(dumped, """
-[
-  true
-]
-"""
-        )
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[true]")
     }
     
     func testNSString() {
         
         let list = [ "test" as NSString ]
-        XCTAssertEqual(list.jsonDump(), """
-[
-  "test"
-]
-"""
-        )
+        XCTAssertEqual(list.jsonDump(options: []), "[\"test\"]")
     }
     
     func testNSNumber() {
         
         let list = [ 123 as NSNumber ]
-        let dumped = list.jsonDump()
-        XCTAssertEqual(dumped, """
-[
-  123
-]
-"""
-        )
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[123]")
     }
     
     func testNSNumberDouble() {
         
         let list = [ 123.45 as NSNumber ]
-        let dumped = list.jsonDump()
-        XCTAssertEqual(dumped, """
-[
-  123.45
-]
-"""
-        )
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[123.45]")
     }
 
     func testDate() {
         
         let list = [ Date(timeIntervalSinceReferenceDate: 0) ]
-        let dumped = list.jsonDump()
-        XCTAssertEqual(dumped, """
-[
-  "2001-01-01 00:00:00 +0000"
-]
-"""
-        )
+        let dumped = list.jsonDump(options: [])
+        XCTAssertEqual(dumped, "[\"2001-01-01 00:00:00 +0000\"]")
     }
 
 
