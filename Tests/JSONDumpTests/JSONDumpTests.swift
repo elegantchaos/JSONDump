@@ -2,7 +2,7 @@ import XCTest
 @testable import JSONDump
 
 final class JSONDumpTests: XCTestCase {
-    
+
     func testString() {
         let list = [ "test" ]
         XCTAssertEqual(list.jsonDump(options: JSONDump.compactDumpOptions), "[\"test\"]")
@@ -25,18 +25,18 @@ final class JSONDumpTests: XCTestCase {
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "[true]")
     }
-    
+
     func testNSString() {
         let list = [ "test string" as NSString ]
         XCTAssertEqual(list.jsonDump(options: JSONDump.compactDumpOptions), "[\"test string\"]")
     }
-    
+
     func testNSNumber() {
         let list = [ 123 as NSNumber ]
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "[123]")
     }
-    
+
     func testNSNumberDouble() {
         let list = [ 123.45 as NSNumber ]
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
@@ -54,7 +54,7 @@ final class JSONDumpTests: XCTestCase {
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "[{\"height\":34,\"width\":12}]")
     }
-    
+
     func testRect() {
         let list = [ NSValue(rect: NSRect(origin: CGPoint(x:1, y:2), size: CGSize(width: 3, height: 4))) ]
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
@@ -67,6 +67,7 @@ final class JSONDumpTests: XCTestCase {
         XCTAssertEqual(dumped, "[{\"bottom\":3,\"left\":2,\"right\":4,\"top\":1}]")
     }
 
+#if !os(Linux)
     func testPointer() {
         let list = [ NSValue(pointer: UnsafeRawPointer(bitPattern: 1234)) ]
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
@@ -78,6 +79,7 @@ final class JSONDumpTests: XCTestCase {
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "[\"-> nil\"]")
     }
+#endif
 
     func testDate() {
         let list = [ Date(timeIntervalSinceReferenceDate: 0) ]
@@ -86,11 +88,11 @@ final class JSONDumpTests: XCTestCase {
     }
 
     func testNested() {
-        
+
         let dict: [String:Any] = [
             "sub" : [ "list" : [ 1, 2, 3] ]
         ]
-        
+
         let dumped = dict.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "{\"sub\":{\"list\":[1,2,3]}}")
     }
@@ -99,20 +101,20 @@ final class JSONDumpTests: XCTestCase {
         class Object: CustomStringConvertible {
             let description = "custom object"
         }
-        
+
         let list = [ Object() ]
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "[\"custom object\"]")
     }
-    
+
     func testDictionary() {
-        
+
         let dict: [String:Any] = [
             "date" : Date(timeIntervalSince1970: 0),
             "double": 123.45,
             "integer": 123
         ]
-        
+
         let dumped = dict.jsonDump()
         XCTAssertEqual(dumped, """
 {
