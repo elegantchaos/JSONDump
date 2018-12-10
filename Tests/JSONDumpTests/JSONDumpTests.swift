@@ -43,6 +43,7 @@ final class JSONDumpTests: XCTestCase {
         XCTAssertEqual(dumped, "[123.45]")
     }
 
+    #if os(macOS)
     func testPoint() {
         let list = [ NSValue(point: NSPoint(x: 12, y: 34)) ]
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
@@ -66,6 +67,7 @@ final class JSONDumpTests: XCTestCase {
         let dumped = list.jsonDump(options: JSONDump.compactDumpOptions)
         XCTAssertEqual(dumped, "[{\"bottom\":3,\"left\":2,\"right\":4,\"top\":1}]")
     }
+    #endif
 
 #if !os(Linux)
     func testPointer() {
