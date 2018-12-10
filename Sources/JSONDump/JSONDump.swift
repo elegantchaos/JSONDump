@@ -97,6 +97,7 @@ extension NSValue: JSONDumpable {
     public func asValidJSONObject() -> Any {
         let type = String(cString:objCType)
         switch type {
+            #if os(macOS)
         case "{CGPoint=dd}":
             let point = pointValue
             return ["x": point.x, "y": point.y]
@@ -109,6 +110,7 @@ extension NSValue: JSONDumpable {
         case "{NSEdgeInsets=dddd}":
             let insets = edgeInsetsValue
             return ["top": insets.top, "left": insets.left, "bottom": insets.bottom, "right": insets.right]
+            #endif
             
             #if !os(Linux)
         case "^v":
