@@ -20,9 +20,12 @@ matrix:
   - os: osx
     osx_image: xcode10
     language: swift
+    install:
+    - sudo gem install xcpretty-travis-formatter
     script:
     - swift --version
     - swift test
+    - set -o pipefail && xcodebuild test -workspace JSONDump.xcworkspace -scheme JSONDump-Package -destination "name=iPhone 6" -enableCodeCoverage YES -resultBundlePath Mobile.xcresult | xcpretty -f `xcpretty-travis-formatter`
 notifications:
   email: false
   slack:
