@@ -39,7 +39,7 @@ class JSONDump {
      */
     
     public static var defaultDumpOptions : JSONSerialization.WritingOptions {
-        if #available(macOS 10.13, *) {
+        if #available(macOS 10.13, iOS 11.0, *) {
             return [.prettyPrinted, .sortedKeys]
         } else {
             return [.prettyPrinted]
@@ -51,7 +51,7 @@ class JSONDump {
      */
     
     public static var compactDumpOptions : JSONSerialization.WritingOptions {
-        if #available(macOS 10.13, *) {
+        if #available(macOS 10.13, iOS 11.0, *) {
             return [.sortedKeys]
         } else {
             return []
